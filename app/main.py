@@ -1,13 +1,24 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("앱을 시작합니다.")
+
+    yield
+
+    print("앱을 종료합니다.")
 
 def get_application() -> FastAPI:
     application = FastAPI(
         title=settings.PROJECT_NAME,
         openapi_url=f"{settings.API_V1_STR}/openapi.json",
         docs_url=f"{settings.API_V1_STR}/docs",
+        lifespan=lifespan
     )
 
     # CORS (Cross-Origin Resource Sharing) 설정
