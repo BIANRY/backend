@@ -2,6 +2,8 @@ fastapi
 uvicorn[standard]
 sqlmodel
 pydantic
-python-multipart
 passlib[bcrypt]
 python-jose[cryptography]
+pymysql
+python-dotenv
+sqlalchemy

@@ -1,5 +1,7 @@
 from typing import Optional, List
 from datetime import datetime, date
+
+from sqlalchemy import UniqueConstraint
 from sqlmodel import SQLModel, Field, Relationship
 
 
@@ -34,8 +36,7 @@ class Board(SQLModel, table=True):
 
 # 3. 잔디심기(활동) 모델
 class Grass(SQLModel, table=True):
-    # 중복 방지를 위한 Unique Constraint 설정 (한 유저는 하루에 하나의 기록만)
-    __table_args__ = ({"sqlite_autoincrement": True},)
+    __table_args__ = (UniqueConstraint("user_id", "date", name="unique_user_date"),)
 
     id: Optional[int] = Field(default=None, primary_key=True)
     date: date  # YYYY-MM-DD

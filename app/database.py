@@ -1,17 +1,22 @@
+import os
+
+from dotenv import load_dotenv
+from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, create_engine, Session
 
-# 1. DB 파일 이름 (프로젝트 루트에 생성됨)
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
+load_dotenv()
 
-# 2. 엔진 생성 (connect_args는 SQLite 전용 설정)
-engine = create_engine(sqlite_url, echo=True, connect_args={"check_same_thread": False})
+DB_USER = os.getenv("DB_USERNAME", "root")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "3306")
+DB_NAME = os.getenv("DB_NAME", "binary")
 
-# 3. 테이블 생성 함수 (앱 시작 시 실행)
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
+DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
 
-# 4. 세션 생성 함수 (Dependency로 사용)
+engine = create_engine(DATABASE_URL, echo=True)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 def get_session():
     with Session(engine) as session:
         yield session
