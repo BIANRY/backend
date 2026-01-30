@@ -1,25 +1,46 @@
-from typing import Optional
-from datetime import datetime
-from sqlmodel import Field, SQLModel
+from typing import Optional, List
+from datetime import datetime, date
+from sqlmodel import SQLModel, Field, Relationship
 
-# 1. 기본 설계도 (공통으로 쓰는 필드)
-class PostBase(SQLModel):
+
+# 1. 사용자 모델
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    email: str = Field(unique=True, index=True)
+    password: str
+    name: str
+    student_id: str
+    generation: int  # 기수
+    role: str = "member"  # 기본값은 member
+    baekjoon_id: Optional[str] = None  # 백준 ID (크롤링용)
+
+    # 관계 설정 (User가 지워지면 작성글, 잔디정보도 같이 관리하기 위함)
+    posts: List["Board"] = Relationship(back_populates="author")
+    grasses: List["Grass"] = Relationship(back_populates="user")
+
+
+# 2. 게시판 모델
+class Board(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
     title: str
     content: str
-    author: str  # 나중에는 로그인한 유저 ID로 바꿀 예정
-
-# 2. 실제 DB 테이블 (table=True)
-class Post(PostBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    category: str
     created_at: datetime = Field(default_factory=datetime.now)
-    view_count: int = Field(default=0)
 
-# 3. 데이터 생성용 (API 요청 받을 때 id, date는 입력 안 받음)
-class PostCreate(PostBase):
-    pass
+    # Foreign Key (작성자)
+    user_id: Optional[int] = Field(default=None, foreign_key="user.id")
+    author: Optional[User] = Relationship(back_populates="posts")
 
-# 4. 데이터 조회용 (API 응답 줄 때 id, date 포함)
-class PostRead(PostBase):
-    id: int
-    created_at: datetime
-    view_count: int
+
+# 3. 잔디심기(활동) 모델
+class Grass(SQLModel, table=True):
+    # 중복 방지를 위한 Unique Constraint 설정 (한 유저는 하루에 하나의 기록만)
+    __table_args__ = ({"sqlite_autoincrement": True},)
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    date: date  # YYYY-MM-DD
+    solved_count: int  # 그날 푼 문제 수
+
+    # Foreign Key (누구 기록인지)
+    user_id: Optional[int] = Field(default=None, foreign_key="user.id")
+    user: Optional[User] = Relationship(back_populates="grasses")
