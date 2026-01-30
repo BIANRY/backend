@@ -1,10 +1,6 @@
 fastapi
 uvicorn[standard]
-sqlmodel
-pydantic
-passlib[bcrypt]
-python-jose[cryptography]
 pymysql
-python-dotenv
 sqlalchemy
-alembic
+pydantic_settings
+uliweb-alembic
