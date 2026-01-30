@@ -1,18 +1,12 @@
-import os
-
-from dotenv import load_dotenv
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import SQLModel, create_engine, Session
+from app.core.config import settings
 
-load_dotenv()
+# 1. SQLAlchemy 엔진 생성
+engine = create_engine(
+    settings.DATABASE_URL,
+    pool_pre_ping=True
+)
 
-DB_USER = os.getenv("DB_USERNAME", "root")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "")
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "3306")
-DB_NAME = os.getenv("DB_NAME", "binary")
-
-DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
-
-engine = create_engine(DATABASE_URL, echo=True)
+# 2. 세션 로컬 클래스 생성
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
