@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
-pymysql
 sqlalchemy
 pydantic_settings
-uliweb-alembic
+alembic
+psycopg2-binary
