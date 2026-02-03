@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
 from typing import Optional
 
 
@@ -9,10 +9,20 @@ class BoardCreate(BaseModel):
     content: str
     category: str
 
+    @field_validator('title', 'content')
+    def not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError('empty string is not allowed')
+        return v
+
 
 class BoardUpdate(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None
+
+
+class BoardDelete(BaseModel):
+    board_id: int
 
 
 class BoardAuthor(BaseModel):
