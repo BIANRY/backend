@@ -18,6 +18,7 @@ def get_board(db: Session, board_id: int):
 
     return board
 
+
 def create_board(db: Session, board_create: BoardCreate):
     db_board = Board(
         title=board_create.title,
@@ -27,11 +28,13 @@ def create_board(db: Session, board_create: BoardCreate):
     db.add(db_board)
     db.commit()
 
+
 def update_board(db: Session, db_board: Board, board_update: BoardUpdate):
     db_board.title = board_update.title
     db_board.content = board_update.content
     db.add(db_board)
     db.commit()
+
 
 def delete_board(db: Session, db_board: Board):
     db.delete(db_board)
