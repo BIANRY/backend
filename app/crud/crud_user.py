@@ -15,3 +15,6 @@ def create_user(db: Session, user_create: UserCreate):
     )
     db.add(db_user)
     db.commit()
+
+def get_user(db: Session, student_id: str):
+    return db.query(User).filter(User.student_id == student_id).first()

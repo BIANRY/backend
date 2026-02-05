@@ -13,3 +13,7 @@ class UserCreate(BaseModel):
             raise ValueError('empty string is not allowed')
         return v
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    student_id: str
