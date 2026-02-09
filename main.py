@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.v1.api import api_router
 from app.core.config import settings
 
 @asynccontextmanager
@@ -31,7 +32,7 @@ def get_application() -> FastAPI:
     )
 
     # 라우터 등록
-    # application.include_router(api_router, prefix=settings.API_V1_STR)
+    application.include_router(api_router, prefix=settings.API_V1_STR)
 
     return application
 
