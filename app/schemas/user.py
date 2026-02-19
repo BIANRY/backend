@@ -17,4 +17,6 @@ class UserCreate(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
-    student_id: str
+
+class TokenData(BaseModel):
+    student_id: str | None = None
