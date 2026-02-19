@@ -8,3 +8,4 @@ psycopg2-binary
 pyjwt
 pwdlib[argon2]
 python-jose
+python-multipart
