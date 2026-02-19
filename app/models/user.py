@@ -12,7 +12,7 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     name = Column(String(255), nullable=False)
     student_id = Column(String(10), unique=True, nullable=False)
-    generation = Column(Integer, nullable=False)
+    # generation = Column(Integer, nullable=False)
     role = Column(String(255), default="member")
     baekjoon_id = Column(String(255))
 
