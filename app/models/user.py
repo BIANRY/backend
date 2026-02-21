@@ -15,6 +15,7 @@ class User(Base):
     # generation = Column(Integer, nullable=False)
     role = Column(String(255), default="member")
     baekjoon_id = Column(String(255))
+    tier = Column(Integer, default=0)
     last_grass_sync = Column(DateTime(timezone=True), nullable=True)
 
     boards = relationship("Board", back_populates="user")

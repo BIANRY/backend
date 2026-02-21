@@ -7,7 +7,9 @@ class RankingResponse(BaseModel):
     user_id: int
     name: str
     baekjoon_id: str | None
-    monthly_active_days: int
+    tier: int
+    attendance: int
+    streak: int
 
     model_config = ConfigDict(from_attributes=True)
 

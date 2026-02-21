@@ -1,5 +1,6 @@
 import re
 import json
+import urllib.request
 from datetime import datetime
 from typing import List, Dict, Any
 
@@ -8,6 +9,22 @@ try:
 except ImportError:
     cloudscraper = None
 
+def fetch_solvedac_tier(baekjoon_id: str) -> int:
+    """
+    solved.ac 공식 API를 통해 유저의 티어 정보(Integer)를 가져옵니다.
+    0: Unrated, 1~5: Bronze 5~1, 6~10: Silver 5~1 등
+    """
+    url = f"https://solved.ac/api/v3/user/show?handle={baekjoon_id}"
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    try:
+        import ssl
+        context = ssl._create_unverified_context()
+        res = urllib.request.urlopen(req, context=context)
+        data = json.loads(res.read().decode('utf-8'))
+        return data.get('tier', 0)
+    except Exception as e:
+        print(f"[{baekjoon_id}] solved.ac 티어 정보를 가져오는데 실패했습니다: {e}")
+        return 0
 
 def fetch_baekjoon_grass(baekjoon_id: str) -> List[Dict[str, Any]]:
     """
