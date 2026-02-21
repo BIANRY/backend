@@ -1,11 +1,10 @@
-from datetime import date
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import insert
 
 from app.models.grass import Grass
 from app.models.user import User
-from app.utils.baekjoon import fetch_baekjoon_grass
+from app.core.baekjoon import fetch_baekjoon_grass
 
 
 def sync_user_grass(db: Session, user: User) -> int:
@@ -53,8 +52,8 @@ def get_monthly_ranking(db: Session, year: int, month: int):
             User.baekjoon_id,
             func.count(Grass.id).label("monthly_active_days")
         )
-        .join(Grass, (User.id == Grass.user_id) & 
-                     (func.extract('year', Grass.date) == year) & 
+        .join(Grass, (User.id == Grass.user_id) &
+                     (func.extract('year', Grass.date) == year) &
                      (func.extract('month', Grass.date) == month) &
                      (Grass.solved_count > 0))
         .group_by(User.id)
