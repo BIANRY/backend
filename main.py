@@ -6,12 +6,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.api import api_router
 from app.core.config import settings
 
+from app.core.scheduler import setup_scheduler, scheduler
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("앱을 시작합니다.")
+    
+    # 백그라운드 자동 동기화 스케줄러 시작
+    setup_scheduler()
 
     yield
 
+    # 앱 종료 시 스케줄러 차단
+    if scheduler.running:
+        scheduler.shutdown()
+        
     print("앱을 종료합니다.")
 
 def get_application() -> FastAPI:

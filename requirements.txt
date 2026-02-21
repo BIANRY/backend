@@ -11,3 +11,4 @@ python-jose
 python-multipart
 cloudscraper
 beautifulsoup4
+apscheduler
