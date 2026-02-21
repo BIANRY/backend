@@ -53,10 +53,10 @@ def get_monthly_ranking(db: Session, year: int, month: int):
             User.baekjoon_id,
             func.count(Grass.id).label("monthly_active_days")
         )
-        .outerjoin(Grass, (User.id == Grass.user_id) & 
-                          (func.extract('year', Grass.date) == year) & 
-                          (func.extract('month', Grass.date) == month) &
-                          (Grass.solved_count > 0))
+        .join(Grass, (User.id == Grass.user_id) & 
+                     (func.extract('year', Grass.date) == year) & 
+                     (func.extract('month', Grass.date) == month) &
+                     (Grass.solved_count > 0))
         .group_by(User.id)
         .order_by(func.count(Grass.id).desc(), User.name.asc()) # 푼 일수 내림차순, 이름 오름차순
         .all()
