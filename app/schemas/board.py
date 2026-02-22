@@ -5,7 +5,6 @@ from typing import Optional
 
 
 class BoardCreate(BaseModel):
-    user_id: int
     title: str
     content: str
     category: str
