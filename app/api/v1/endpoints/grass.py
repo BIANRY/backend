@@ -10,16 +10,14 @@ from app.schemas import grass as schemas_grass
 router = APIRouter()
 
 
-@router.post("/sync/{student_id}", response_model=schemas_grass.GrassSyncResponse)
+@router.post("/sync", response_model=schemas_grass.GrassSyncResponse)
 def sync_grass(
-    student_id: str,
     db: Session = Depends(deps.get_db),
-    # current_user = Depends(deps.get_current_active_user)
+    user = Depends(deps.get_current_user)
 ):
     """
     특정 사용자의 백준 잔디 데이터를 가져와 DB와 동기화합니다.
     """
-    user = crud_user.get_user(db, student_id=student_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
         
