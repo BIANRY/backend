@@ -23,7 +23,8 @@ def create_board(db: Session, board_create: BoardCreate):
     db_board = Board(
         title=board_create.title,
         content=board_create.content,
-        category=board_create.category
+        category=board_create.category,
+        user_id=board_create.user_id
     )
     db.add(db_board)
     db.commit()

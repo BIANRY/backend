@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_db
+from app.api.deps import get_db, get_current_user
 from app.crud.crud_board import get_board_list, create_board, get_board, update_board, delete_board
+from app.models.user import User
 from app.schemas.board import BoardListResponse, BoardCreate, BoardDetailResponse, BoardUpdate
 
 router = APIRouter()
@@ -31,8 +32,9 @@ def board_list(
 def board_create(
     _board_create: BoardCreate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-    create_board(db, _board_create)
+    create_board(db, _board_create, current_user.id)
 
 
 # 3️⃣ 게시글 상세 조회
@@ -57,11 +59,15 @@ def board_update(
     id: int,
     board_update: BoardUpdate,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     board = get_board(db, board_id=id)
 
     if not board:
         raise HTTPException(status_code=404, detail="Board not found")
+
+    if board.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="수정 권한이 없습니다.")
 
     update_board(db, board, board_update)
 
@@ -72,10 +78,14 @@ def board_update(
 def board_delete(
     id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     board = get_board(db, board_id=id)
 
     if not board:
         raise HTTPException(status_code=404, detail="Board not found")
+
+    if board.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="삭제 권한이 없습니다.")
 
     delete_board(db, board)
