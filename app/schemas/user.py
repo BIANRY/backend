@@ -18,5 +18,29 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
     student_id: str | None = None
+
+
+class UserUpdate(BaseModel):
+    name: str | None = None
+    email: EmailStr | None = None
+    bio: str | None = None
+    baekjoon_id: str | None = None
+    old_password: str | None = None
+    new_password: str | None = None
+
+
+class UserResponse(BaseModel):
+    id: int
+    name: str
+    student_id: str
+    email: EmailStr
+    bio: str | None = None
+    role: str
+    baekjoon_id: str | None = None
+    tier: int | None = 0
+
+    class Config:
+        from_attributes = True

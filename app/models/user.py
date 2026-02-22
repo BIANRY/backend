@@ -14,6 +14,7 @@ class User(Base):
     student_id = Column(String(10), unique=True, nullable=False)
     # generation = Column(Integer, nullable=False)
     role = Column(String(255), default="member")
+    bio = Column(String(255), nullable=True)
     baekjoon_id = Column(String(255))
     tier = Column(Integer, default=0)
     last_grass_sync = Column(DateTime(timezone=True), nullable=True)
