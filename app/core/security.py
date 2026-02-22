@@ -10,7 +10,8 @@ from app.core.config import settings
 
 password_hash = PasswordHash.recommended()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+# Swagger UI의 Authorize 버튼이 실제 로그인 API를 호출하도록 올바른 URL로 수정합니다.
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/users/login")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return password_hash.verify(plain_password, hashed_password)
