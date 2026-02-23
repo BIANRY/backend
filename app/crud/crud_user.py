@@ -82,3 +82,66 @@ def update_user(db: Session, db_user: User, user_update: UserUpdate):
             sync_user_grass(db, db_user)
 
     return db_user
+
+
+def get_my_profile(db: Session, db_user: User) -> dict:
+    from app.models.grass import Grass
+    from datetime import datetime, timedelta, timezone
+    from sqlalchemy import func
+
+    KST = timezone(timedelta(hours=9))
+    now = datetime.now(KST)
+    today = now.date()
+    yesterday = today - timedelta(days=1)
+    
+    # 1. Total Commits: 전체 푼 문제 개수 (solved_count의 합)
+    total_commits = db.query(func.sum(Grass.solved_count)).filter(Grass.user_id == db_user.id).scalar() or 0
+
+    # 2. Monthly Goal: 이번 달 푼 날짜 수 (출석일 수)
+    monthly_attendance = db.query(func.count(Grass.id)).filter(
+        Grass.user_id == db_user.id,
+        func.extract('year', Grass.date) == today.year,
+        func.extract('month', Grass.date) == today.month,
+        Grass.solved_count > 0
+    ).scalar() or 0
+
+    # 3. Current Streak: 현재 연속일 수
+    all_grass = db.query(Grass.date).filter(
+        Grass.user_id == db_user.id, 
+        Grass.solved_count > 0
+    ).order_by(Grass.date.desc()).all()
+    
+    dates = [g.date for g in all_grass]
+    current_streak = 0
+    
+    if dates:
+        first_date = dates[0]
+        if first_date == today or first_date == yesterday:
+            current_streak = 1
+            for i in range(1, len(dates)):
+                expected_date = dates[i-1] - timedelta(days=1)
+                if dates[i] == expected_date:
+                    current_streak += 1
+                else:
+                    break
+
+    # 4. Activity Log: 올해(Current Year)의 잔디 기록 (1문제 이상 푼 날만)
+    yearly_grass = db.query(Grass).filter(
+        Grass.user_id == db_user.id,
+        func.extract('year', Grass.date) == today.year,
+        Grass.solved_count > 0
+    ).order_by(Grass.date.asc()).all()
+    
+    activity_log = [{"date": str(g.date), "count": g.solved_count} for g in yearly_grass]
+
+    return {
+        "name": db_user.name,
+        "bio": db_user.bio,
+        "student_id": db_user.student_id,
+        "tier": db_user.tier,
+        "baekjoon_id": db_user.baekjoon_id,
+        "monthly_grass_count": monthly_attendance,
+        "total_grass_count": int(total_commits),
+        "current_streak": current_streak,
+        "activity_log": activity_log
+    }

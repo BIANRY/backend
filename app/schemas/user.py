@@ -44,3 +44,20 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ActivityLog(BaseModel):
+    date: str
+    count: int
+
+
+class MyProfileResponse(BaseModel):
+    name: str
+    bio: str | None = None
+    student_id: str
+    tier: int | None = 0
+    baekjoon_id: str | None = None
+    monthly_grass_count: int
+    total_grass_count: int
+    current_streak: int
+    activity_log: list[ActivityLog]

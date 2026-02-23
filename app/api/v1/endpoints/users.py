@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.core.security import create_access_token, verify_password
 from app.crud.crud_user import get_user, create_user, authenticate_user
 from app.models.user import User
-from app.schemas.user import UserCreate, Token, UserUpdate, UserResponse
+from app.schemas.user import UserCreate, Token, UserUpdate, UserResponse, MyProfileResponse
 
 router = APIRouter()
 
@@ -52,7 +52,18 @@ def user_login(
     return Token(access_token=access_token, token_type="bearer")
 
 
-# 3) 내 정보 수정
+# 3) 내 정보 조회 (마이페이지)
+# GET /users/me
+@router.get("/me", response_model=MyProfileResponse)
+def read_user_profile(
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user),
+):
+    from app.crud.crud_user import get_my_profile
+    return get_my_profile(db, current_user)
+
+
+# 4) 내 정보 수정
 # PUT /users/me
 @router.put("/me", response_model=UserResponse)
 def update_user_profile(
