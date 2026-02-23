@@ -12,3 +12,4 @@ python-multipart
 cloudscraper
 beautifulsoup4
 apscheduler
+resend
