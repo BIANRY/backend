@@ -61,3 +61,18 @@ class MyProfileResponse(BaseModel):
     total_grass_count: int
     current_streak: int
     activity_log: list[ActivityLog]
+
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+
+class PasswordResetVerify(BaseModel):
+    email: EmailStr
+    code: str
+
+
+class PasswordResetConfirm(BaseModel):
+    email: EmailStr
+    code: str
+    new_password: str

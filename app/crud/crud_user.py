@@ -27,6 +27,10 @@ def get_user(db: Session, student_id: str):
     return db.query(User).filter(User.student_id == student_id).first()
 
 
+def get_user_by_email(db: Session, email: str):
+    return db.query(User).filter(User.email == email).first()
+
+
 def authenticate_user(db: Session, student_id: str, password: str):
     user = get_user(db, student_id=student_id)
     if not user:
