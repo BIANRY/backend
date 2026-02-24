@@ -65,8 +65,8 @@ def read_user_profile(
 
 
 # 4) 내 정보 수정
-# PUT /users/me
-@router.put("/me", response_model=UserResponse)
+# PATCH /users/me
+@router.patch("/me", response_model=UserResponse)
 def update_user_profile(
         user_update: UserUpdate,
         db: Session = Depends(get_db),

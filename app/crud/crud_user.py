@@ -145,6 +145,7 @@ def get_my_profile(db: Session, db_user: User) -> dict:
         "name": db_user.name,
         "bio": db_user.bio,
         "student_id": db_user.student_id,
+        "email": db_user.email,
         "tier": db_user.tier,
         "baekjoon_id": db_user.baekjoon_id,
         "monthly_grass_count": monthly_attendance,

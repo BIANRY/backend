@@ -55,6 +55,7 @@ class MyProfileResponse(BaseModel):
     name: str
     bio: str | None = None
     student_id: str
+    email: EmailStr
     tier: int | None = 0
     baekjoon_id: str | None = None
     monthly_grass_count: int
