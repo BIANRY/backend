@@ -59,6 +59,7 @@ def setup_scheduler():
         'cron',
         hour=0,
         minute=10,
+        timezone='Asia/Seoul',
         id="sync_grass_daily",
         replace_existing=True
     )
