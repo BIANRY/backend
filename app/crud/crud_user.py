@@ -129,14 +129,17 @@ def get_my_profile(db: Session, db_user: User) -> dict:
                 else:
                     break
 
-    # 4. Activity Log: 올해(Current Year)의 잔디 기록 (1문제 이상 푼 날만)
-    yearly_grass = db.query(Grass).filter(
+    # 4. Activity Log: 최근 1년(최근 43주 전 월요일부터)의 잔디 기록 (1문제 이상 푼 날만)
+    forty_three_weeks_ago = today - timedelta(weeks=43)
+    forty_three_weeks_ago_monday = forty_three_weeks_ago - timedelta(days=forty_three_weeks_ago.weekday())
+    
+    recent_grass = db.query(Grass).filter(
         Grass.user_id == db_user.id,
-        func.extract('year', Grass.date) == today.year,
+        Grass.date >= forty_three_weeks_ago_monday,
         Grass.solved_count > 0
     ).order_by(Grass.date.asc()).all()
     
-    activity_log = [{"date": str(g.date), "count": g.solved_count} for g in yearly_grass]
+    activity_log = [{"date": str(g.date), "count": g.solved_count} for g in recent_grass]
 
     return {
         "name": db_user.name,
