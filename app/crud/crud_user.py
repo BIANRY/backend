@@ -77,7 +77,11 @@ def update_user(db: Session, db_user: User, user_update: UserUpdate):
     if is_baekjoon_id_changed:
         # Delete existing grass records for this user
         db.query(Grass).filter(Grass.user_id == db_user.id).delete()
-        db_user.tier = 0
+        from app.core.baekjoon import fetch_solvedac_tier
+        if db_user.baekjoon_id:
+            db_user.tier = fetch_solvedac_tier(db_user.baekjoon_id)
+        else:
+            db_user.tier = 0
         db.commit()
 
         # Trigger sync for new ID
