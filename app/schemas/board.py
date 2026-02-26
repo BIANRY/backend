@@ -35,7 +35,7 @@ class BoardResponseBase(BaseModel):
     id: int
     title: str
     category: str
-    # user: BoardAuthor
+    user: BoardAuthor
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

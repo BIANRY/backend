@@ -5,7 +5,8 @@ from app.schemas.board import BoardCreate, BoardUpdate
 
 
 def get_board_list(db: Session, skip: int = 0, limit: int = 10):
-    _board_list = db.query(Board).order_by(Board.created_at.desc())
+    from sqlalchemy.orm import joinedload
+    _board_list = db.query(Board).options(joinedload(Board.user)).order_by(Board.created_at.desc())
 
     total = _board_list.count()
     board_list = _board_list.offset(skip).limit(limit).all()
@@ -14,7 +15,8 @@ def get_board_list(db: Session, skip: int = 0, limit: int = 10):
 
 
 def get_board(db: Session, board_id: int):
-    board = db.query(Board).filter(Board.id == board_id).first()
+    from sqlalchemy.orm import joinedload
+    board = db.query(Board).options(joinedload(Board.user)).filter(Board.id == board_id).first()
 
     return board
 
