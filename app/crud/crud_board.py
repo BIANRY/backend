@@ -33,8 +33,12 @@ def create_board(db: Session, board_create: BoardCreate, user_id: int):
 
 
 def update_board(db: Session, db_board: Board, board_update: BoardUpdate):
-    db_board.title = board_update.title
-    db_board.content = board_update.content
+    if board_update.title is not None:
+        db_board.title = board_update.title
+    if board_update.content is not None:
+        db_board.content = board_update.content
+    if board_update.category is not None:
+        db_board.category = board_update.category
     db.add(db_board)
     db.commit()
 
