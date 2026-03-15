@@ -146,6 +146,7 @@ def get_my_profile(db: Session, db_user: User) -> dict:
     activity_log = [{"date": str(g.date), "count": g.solved_count} for g in recent_grass]
 
     return {
+        "id": db_user.id,
         "name": db_user.name,
         "bio": db_user.bio,
         "student_id": db_user.student_id,

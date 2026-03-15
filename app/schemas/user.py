@@ -52,6 +52,7 @@ class ActivityLog(BaseModel):
 
 
 class MyProfileResponse(BaseModel):
+    id: int
     name: str
     bio: str | None = None
     student_id: str
