@@ -36,11 +36,22 @@ def fetch_baekjoon_grass(baekjoon_id: str) -> List[Dict[str, Any]]:
         return []
 
     url = f"https://www.acmicpc.net/user/{baekjoon_id}"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Referer": "https://www.acmicpc.net/",
+        "Connection": "keep-alive",
+    }
     
     scraper = cloudscraper.create_scraper()
+
+    scraper.get("https://www.acmicpc.net/", headers=headers)
     
     try:
-        response = scraper.get(url, timeout=10)
+        response = scraper.get(url, headers=headers, timeout=10)
         response.raise_for_status()
         html = response.text
     except Exception as e:
